@@ -1,38 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/category_provider.dart';
+import 'providers/expense_provider.dart';
+import 'providers/budget_provider.dart';
+import 'providers/theme_provider.dart';
+import 'app.dart';
 
-void main() {
-  runApp(const AIAccountingApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class AIAccountingApp extends StatelessWidget {
-  const AIAccountingApp({super.key});
+  final categoryProvider = CategoryProvider();
+  final expenseProvider = ExpenseProvider();
+  final budgetProvider = BudgetProvider();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AI Accounting',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
+  await categoryProvider.loadCategories();
+  await budgetProvider.loadBudgets();
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AI Accounting'),
-      ),
-      body: const Center(
-        child: Text('Personal Expense Tracker'),
-      ),
-    );
-  }
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: categoryProvider),
+        ChangeNotifierProvider.value(value: expenseProvider),
+        ChangeNotifierProvider.value(value: budgetProvider),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
+      child: const AIAccountingApp(),
+    ),
+  );
 }
