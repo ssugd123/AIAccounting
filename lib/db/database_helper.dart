@@ -15,7 +15,7 @@ class DatabaseHelper {
 
   Future<Database> _initDB() async {
     final path = join(await getDatabasesPath(), 'aiaccounting.db');
-    return openDatabase(path, version: 1, onCreate: _onCreate);
+    return openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -39,9 +39,12 @@ class DatabaseHelper {
         recorded_at TEXT NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
+        source TEXT DEFAULT 'manual',
+        external_id TEXT,
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
       )
     ''');
+    await db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_expenses_dedup ON expenses(source, external_id) WHERE external_id IS NOT NULL');
     await db.execute('''
       CREATE TABLE budgets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,6 +64,14 @@ class DatabaseHelper {
         'is_preset': 1,
         'created_at': now,
       });
+    }
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute("ALTER TABLE expenses ADD COLUMN source TEXT DEFAULT 'manual'");
+      await db.execute('ALTER TABLE expenses ADD COLUMN external_id TEXT');
+      await db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_expenses_dedup ON expenses(source, external_id) WHERE external_id IS NOT NULL');
     }
   }
 

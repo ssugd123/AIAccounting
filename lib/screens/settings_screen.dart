@@ -13,6 +13,14 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            leading: const Icon(Icons.file_download),
+            title: const Text('导入账单'),
+            subtitle: const Text('从微信或支付宝账单导入'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.pushNamed(context, '/bill-import'),
+          ),
+          const Divider(indent: 72),
+          ListTile(
             leading: const Icon(Icons.currency_yuan),
             title: const Text('货币单位'),
             subtitle: const Text('人民币 (¥)'),

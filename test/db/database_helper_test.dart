@@ -41,5 +41,13 @@ void main() {
           await db.rawQuery('SELECT COUNT(*) FROM categories'));
       expect(count, 7);
     });
+
+    test('expenses table has source and external_id columns', () async {
+      final db = await DatabaseHelper.instance.database;
+      final cols = await db.rawQuery('PRAGMA table_info(expenses)');
+      final colNames = cols.map((c) => c['name'] as String).toList();
+      expect(colNames, contains('source'));
+      expect(colNames, contains('external_id'));
+    });
   });
 }

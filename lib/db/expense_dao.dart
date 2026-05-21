@@ -11,6 +11,37 @@ class ExpenseDao {
     return db.insert('expenses', e.toMap());
   }
 
+  Future<int> insertIfNotExists(Expense expense) async {
+    final db = await _db;
+    // Check dedup
+    if (expense.externalId != null && expense.externalId!.isNotEmpty) {
+      final existing = await db.rawQuery(
+        'SELECT id FROM expenses WHERE source = ? AND external_id = ?',
+        [expense.source, expense.externalId],
+      );
+      if (existing.isNotEmpty) return -1; // already exists, skip
+    }
+    return db.insert('expenses', expense.toMap());
+  }
+
+  Future<int> insertAll(List<Expense> expenses) async {
+    int count = 0;
+    final db = await _db;
+    final batch = db.batch();
+    for (final expense in expenses) {
+      if (expense.externalId != null && expense.externalId!.isNotEmpty) {
+        // Can't easily check per-item in batch — use individual inserts for dedup
+        final result = await insertIfNotExists(expense);
+        if (result > 0) count++;
+      } else {
+        batch.insert('expenses', expense.toMap());
+        count++;
+      }
+    }
+    await batch.commit(noResult: true);
+    return count;
+  }
+
   Future<int> update(Expense e) async {
     final db = await _db;
     return db.update('expenses', e.toMap(),

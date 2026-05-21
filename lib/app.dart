@@ -8,6 +8,7 @@ import 'screens/statistics_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/budget_setting_screen.dart';
 import 'screens/category_manage_screen.dart';
+import 'screens/bill_import_screen.dart';
 
 class AIAccountingApp extends StatelessWidget {
   const AIAccountingApp({super.key});
@@ -54,6 +55,8 @@ class AIAccountingApp extends StatelessWidget {
                 );
               case '/budget-setting':
                 return MaterialPageRoute(builder: (_) => const BudgetSettingScreen());
+              case '/bill-import':
+                return MaterialPageRoute(builder: (_) => const BillImportScreen());
               case '/category-manage':
                 return MaterialPageRoute(builder: (_) => const CategoryManageScreen());
               default:
