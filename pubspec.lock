@@ -159,13 +159,13 @@ packages:
     source: hosted
     version: "5.0.0"
   flutter_plugin_android_lifecycle:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: "38d1c268de9097ff59cf0e844ac38759fc78f76836d37edad06fa21e182055a0"
+      sha256: "9ee02950848f61c4129af3d6ec84a1cfc0e47931abc746b03e7a3bc3e8ff6eda"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.34"
+    version: "2.0.22"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -405,6 +405,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  sqlite3_flutter_libs:
+    dependency: "direct main"
+    description:
+      name: sqlite3_flutter_libs
+      sha256: eeb9e3a45207649076b808f8a5a74d68770d0b7f26ccef6d5f43106eee5375ad
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.42"
   stack_trace:
     dependency: transitive
     description:
