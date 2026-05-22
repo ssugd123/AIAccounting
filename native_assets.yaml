@@ -1,0 +1,4 @@
+hook-config:
+  sqlite3:
+    defines:
+      source: executable
